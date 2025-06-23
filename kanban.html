@@ -372,7 +372,7 @@
       card.draggable = true;
       card.dataset.id = proyecto.id;
       card.style.borderLeftColor = coloresPorArea[proyecto.area] || "#ccc";
-      card.querySelector('.area').style.color = coloresPorArea[proyecto.area] || "#666";
+    
 
       card.innerHTML = `
         <div class="area">${proyecto.area}</div>
@@ -382,6 +382,7 @@
         </ul>
       `;
 
+        card.querySelector('.area').style.color = coloresPorArea[proyecto.area] || "#666";
       card.addEventListener("click", () => card.classList.toggle("expanded"));
       card.addEventListener("dragstart", e => {
         e.dataTransfer.setData("text/plain", proyecto.id);
