@@ -173,8 +173,8 @@
       <select id="nuevoEstado">
         <option>Imaginado</option>
         <option>Pensando</option>
-        <option>Comenzado</option>
-        <option>Prototipo</option>
+        <option>Comenzado - En Pausa</option>
+        <option>Comenzado y Activo</option>
         <option>Pulido</option>
         <option>Obra en Marcha</option>
       </select>
@@ -185,7 +185,7 @@
   </div>
 
   <script>
-    const estados = ["Imaginado", "Pensando", "Comenzado", "Prototipo", "Pulido", "Obra en Marcha"];
+    const estados = ["Imaginado", "Pensando", "Comenzado - En Pausa", "Comenzado y Activo", "Pulido", "Obra en Marcha"];
     const coloresPorArea = {
   "Literatura": "#D8A1C4",
   "Videojuego": "#A1C8D8",
@@ -209,14 +209,14 @@
         id: 1,
         titulo: "Esmarfonlesnes",
         area: "Literatura",
-        estado: "Comenzado",
+        estado: "Comenzado y Activo",
         subtareas: ["Ajustar generador de aforismos", "Pulir estética iPhone", "Añadir transiciones suaves"]
       },
       {
         id: 2,
         titulo: "FuncionarYo?",
         area: "Videojuego",
-        estado: "Comenzado",
+        estado: "Comenzado y Activo",
         subtareas: ["Definir mecánicas de evasión", "Diseñar HUD modo café", "Escribir diálogos de parodia"]
       },
       {
@@ -244,21 +244,21 @@
         id: 6,
         titulo: "Hasta que el coaching nos separe (Óptimo Martín)",
         area: "Literatura",
-        estado: "Comenzado",
+        estado: "Comenzado - En Pausa",
         subtareas: ["Retomar"]
       },
       {
         id: 7,
         titulo: "GeoAcento",
         area: "Videojuego",
-        estado: "Comenzado",
+        estado: "Comenzado - En Pausa",
         subtareas: ["Retomar"]
       },
       {
         id: 8,
         titulo: "Test Oposiciones",
         area: "Oposiciones",
-        estado: "Prototipo",
+        estado: "Comenzado y Activo",
         subtareas: ["Continuar"]
       },
       {
@@ -279,7 +279,7 @@
         id: 11,
         titulo: "Entrenamientos Baloncesto",
         area: "Programación",
-        estado: "Comenzado",
+        estado: "Comenzado y Activo",
         subtareas: ["Diseñar a lápiz"]
       },
        {
