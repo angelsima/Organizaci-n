@@ -71,24 +71,27 @@
     }
 
     .card {
-      background: #fafafa;
-      border: 1px solid #ccc;
-      margin: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 4px;
-      cursor: grab;
-      transition: all 0.3s ease;
-    }
+  position: relative;
+  background: #fafafa;
+  border: 1px solid #ccc;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  padding-left: 0.8rem;
+  border-left: 6px solid transparent; /* se sobreescribe con JS */
+  border-radius: 4px;
+  cursor: grab;
+  transition: all 0.3s ease;
+}
 
     .card:hover {
       background: #f0f0f0;
     }
 
-    .card .area {
-      font-size: 0.8rem;
-      color: #666;
-      margin-bottom: 0.2rem;
-    }
+ .card .area {
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
 
     .subtasks {
       margin-top: 0.5rem;
@@ -183,6 +186,16 @@
 
   <script>
     const estados = ["Imaginado", "Pensando", "Comenzado", "Prototipo", "Pulido", "Obra en Marcha"];
+    const coloresPorArea = {
+  "Literatura": "#D8A1C4",
+  "Videojuego": "#A1C8D8",
+  "Oposiciones": "#C4D8A1",
+  "Terreno": "#D8BBA1",
+  "Aprendizaje": "#A1D8B4",
+  "Programación": "#A1A8D8",
+  "Manual": "#D8A1A1",
+  "Sin área": "#cccccc"
+};
     const proyectos = [
       {
         id: 1,
@@ -349,6 +362,8 @@
       card.className = "card";
       card.draggable = true;
       card.dataset.id = proyecto.id;
+      card.style.borderLeftColor = coloresPorArea[proyecto.area] || "#ccc";
+      card.querySelector('.area').style.color = coloresPorArea[proyecto.area] || "#666";
 
       card.innerHTML = `
         <div class="area">${proyecto.area}</div>
