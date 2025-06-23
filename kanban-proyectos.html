@@ -16,15 +16,32 @@
       margin-bottom: 0.5rem;
     }
 
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto 1rem;
+    }
+
     .filter-area {
-      text-align: center;
-      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    select, button {
+      padding: 0.4rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
     }
 
     .kanban-board {
       display: flex;
       gap: 1rem;
       overflow-x: auto;
+      max-width: 100%;
     }
 
     .column {
@@ -43,6 +60,14 @@
       margin: 0;
       padding: 0.5rem;
       border-radius: 8px 8px 0 0;
+      font-size: 1.1rem;
+    }
+
+    .counter {
+      font-size: 0.85rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: #666;
     }
 
     .card {
@@ -85,100 +110,172 @@
       background-color: #d0ebff !important;
     }
 
-    select {
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 300px;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+    }
+
+    .modal-content input, .modal-content textarea, .modal-content select {
+      width: 100%;
+      margin-bottom: 0.5rem;
       padding: 0.4rem;
       font-size: 1rem;
+      border: 1px solid #ccc;
       border-radius: 4px;
     }
+
+    .modal-content button {
+      margin-top: 0.5rem;
+    }
+
   </style>
 </head>
 <body>
-  <h1>Kanban de Ideas y Proyectos</h1>
-  <div class="filter-area">
-    <label for="areaFilter">Filtrar por área: </label>
-    <select id="areaFilter">
-      <option value="Todas">Todas</option>
-    </select>
+  <h1 id="mainTitle">Kanban de Ideas y Proyectos (Total: 0)</h1>
+
+  <div class="top-bar">
+    <div class="filter-area">
+      <label for="areaFilter">Filtrar por área:</label>
+      <select id="areaFilter">
+        <option value="Todas">Todas</option>
+      </select>
+    </div>
+    <button onclick="mostrarModal()">+ Añadir idea</button>
   </div>
+
   <div class="kanban-board" id="kanbanBoard">
     <!-- Columnas dinámicas -->
   </div>
 
+  <div class="modal" id="modal" style="display:none;">
+    <div class="modal-content">
+      <h3>Nueva Idea</h3>
+      <input type="text" id="nuevoTitulo" placeholder="Título" required>
+      <input type="text" id="nuevaArea" placeholder="Área (ej. Videojuego)">
+      <select id="nuevoEstado">
+        <option>Pensamiento</option>
+        <option>Primeras pruebas</option>
+        <option>Prototipo</option>
+        <option>Pulido</option>
+      </select>
+      <textarea id="nuevasSubtareas" placeholder="Subtareas (una por línea)"></textarea>
+      <button onclick="crearNuevaIdea()">Crear</button>
+      <button onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+
   <script>
     const estados = ["Pensamiento", "Primeras pruebas", "Prototipo", "Pulido"];
-
     const proyectos = [
       {
         id: 1,
         titulo: "Loa al esmarfon",
         area: "Arte interactivo",
         estado: "Prototipo",
-        subtareas: [
-          "Ajustar generador de aforismos",
-          "Pulir estética iPhone",
-          "Añadir transiciones suaves"
-        ]
+        subtareas: ["Ajustar generador de aforismos", "Pulir estética iPhone", "Añadir transiciones suaves"]
       },
       {
         id: 2,
         titulo: "Funcionar Yo (arcade)",
         area: "Videojuego",
         estado: "Primeras pruebas",
-        subtareas: [
-          "Definir mecánicas de evasión",
-          "Diseñar HUD modo café",
-          "Escribir diálogos de parodia"
-        ]
+        subtareas: ["Definir mecánicas de evasión", "Diseñar HUD modo café", "Escribir diálogos de parodia"]
       },
       {
         id: 3,
         titulo: "Precoz",
         area: "Literatura / Teatro",
         estado: "Pensamiento",
-        subtareas: [
-          "Esbozar estructura en 3 actos",
-          "Refinar tono incómodo pero empático"
-        ]
+        subtareas: ["Esbozar estructura", "Refinar tono incómodo"]
       },
       {
         id: 4,
         titulo: "Málaga libre de turistas",
         area: "Videojuego",
         estado: "Pensamiento",
-        subtareas: [
-          "Diseñar enemigos: políticos, fondos buitre",
-          "Ambientación pixel art"
-        ]
+        subtareas: ["Diseñar enemigos", "Ambientación pixel art"]
       }
     ];
 
     const board = document.getElementById("kanbanBoard");
     const areaFilter = document.getElementById("areaFilter");
+    const modal = document.getElementById("modal");
 
-    function crearColumna(estado) {
+    function mostrarModal() {
+      modal.style.display = "flex";
+    }
+
+    function cerrarModal() {
+      modal.style.display = "none";
+      document.getElementById("nuevoTitulo").value = "";
+      document.getElementById("nuevaArea").value = "";
+      document.getElementById("nuevasSubtareas").value = "";
+    }
+
+    function crearNuevaIdea() {
+      const titulo = document.getElementById("nuevoTitulo").value.trim();
+      const area = document.getElementById("nuevaArea").value.trim() || "Sin área";
+      const estado = document.getElementById("nuevoEstado").value;
+      const subtareasRaw = document.getElementById("nuevasSubtareas").value.trim();
+      const subtareas = subtareasRaw ? subtareasRaw.split("\n").map(s => s.trim()).filter(s => s) : [];
+
+      if (titulo) {
+        proyectos.push({
+          id: Date.now(),
+          titulo,
+          area,
+          estado,
+          subtareas
+        });
+        cerrarModal();
+        poblarFiltroAreas();
+        renderizarTablero(areaFilter.value);
+      }
+    }
+
+    function crearColumna(estado, tarjetas) {
       const col = document.createElement("div");
       col.className = "column";
       col.dataset.estado = estado;
-      col.innerHTML = `<h2>${estado}</h2>`;
+
+      col.innerHTML = `
+        <h2>${estado}</h2>
+        <div class="counter">${tarjetas.length} proyecto(s)</div>
+      `;
+
       col.addEventListener("dragover", e => {
         e.preventDefault();
         col.classList.add("drag-over");
       });
-      col.addEventListener("dragleave", () => {
-        col.classList.remove("drag-over");
-      });
+
+      col.addEventListener("dragleave", () => col.classList.remove("drag-over"));
+
       col.addEventListener("drop", e => {
         e.preventDefault();
         const id = e.dataTransfer.getData("text/plain");
         const card = document.querySelector(`[data-id='${id}']`);
         col.appendChild(card);
-        card.classList.remove("drag-over");
-
         const proyecto = proyectos.find(p => p.id == id);
         proyecto.estado = col.dataset.estado;
-
-        col.classList.remove("drag-over");
+        renderizarTablero(areaFilter.value);
       });
+
+      tarjetas.forEach(p => col.appendChild(crearTarjeta(p)));
       return col;
     }
 
@@ -196,45 +293,41 @@
         </ul>
       `;
 
-      card.addEventListener("click", () => {
-        card.classList.toggle("expanded");
-      });
-
+      card.addEventListener("click", () => card.classList.toggle("expanded"));
       card.addEventListener("dragstart", e => {
         e.dataTransfer.setData("text/plain", proyecto.id);
         setTimeout(() => card.classList.add("hide"), 0);
       });
-
-      card.addEventListener("dragend", () => {
-        card.classList.remove("hide");
-      });
+      card.addEventListener("dragend", () => card.classList.remove("hide"));
 
       return card;
     }
 
     function renderizarTablero(filtroArea = "Todas") {
       board.innerHTML = "";
+      let total = 0;
       estados.forEach(estado => {
-        const col = crearColumna(estado);
-        proyectos
+        const tarjetas = proyectos
           .filter(p => p.estado === estado)
-          .filter(p => filtroArea === "Todas" || p.area === filtroArea)
-          .forEach(p => {
-            const card = crearTarjeta(p);
-            col.appendChild(card);
-          });
-        board.appendChild(col);
+          .filter(p => filtroArea === "Todas" || p.area === filtroArea);
+        total += tarjetas.length;
+        board.appendChild(crearColumna(estado, tarjetas));
       });
+      document.getElementById("mainTitle").textContent = `Kanban de Ideas y Proyectos (Total: ${total})`;
     }
 
     function poblarFiltroAreas() {
       const areas = [...new Set(proyectos.map(p => p.area))];
+      const actual = areaFilter.value;
+      areaFilter.innerHTML = `<option value="Todas">Todas</option>`;
       areas.forEach(area => {
+        const count = proyectos.filter(p => p.area === area).length;
         const opt = document.createElement("option");
         opt.value = area;
-        opt.textContent = area;
+        opt.textContent = `${area} (${count})`;
         areaFilter.appendChild(opt);
       });
+      areaFilter.value = actual;
     }
 
     areaFilter.addEventListener("change", () => {
