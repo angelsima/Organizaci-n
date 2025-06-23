@@ -407,18 +407,25 @@
     }
 
     function poblarFiltroAreas() {
-      const areas = [...new Set(proyectos.map(p => p.area))];
-      const actual = areaFilter.value;
-      areaFilter.innerHTML = `<option value="Todas">Todas</option>`;
-      areas.forEach(area => {
-        const count = proyectos.filter(p => p.area === area).length;
-        const opt = document.createElement("option");
-        opt.value = area;
-        opt.textContent = `${area} (${count})`;
-        areaFilter.appendChild(opt);
-      });
-      areaFilter.value = actual;
-    }
+  const areasContadas = {};
+  proyectos.forEach(p => {
+    const area = p.area || "Sin área";
+    areasContadas[area] = (areasContadas[area] || 0) + 1;
+  });
+
+  areaFilter.innerHTML = ""; // Limpiar el select
+  const opcionTodas = document.createElement("option");
+  opcionTodas.value = "Todas";
+  opcionTodas.textContent = `Todas (${proyectos.length})`;
+  areaFilter.appendChild(opcionTodas);
+
+  Object.keys(areasContadas).sort().forEach(area => {
+    const option = document.createElement("option");
+    option.value = area;
+    option.textContent = `${area} (${areasContadas[area]})`;
+    areaFilter.appendChild(option);
+  });
+}
 
     areaFilter.addEventListener("change", () => {
       renderizarTablero(areaFilter.value);
