@@ -196,6 +196,14 @@
   "Manual": "#D8A1A1",
   "Sin área": "#cccccc"
 };
+    const coloresEstado = {
+  "Imaginado": "rgba(21,101,192,0.2)",
+  "Pensando": "rgba(21,101,192,0.3)",
+  "Comenzado": "rgba(21,101,192,0.4)",
+  "Prototipo": "rgba(21,101,192,0.6)",
+  "Pulido": "rgba(21,101,192,0.8)",
+  "Obra en Marcha": "rgba(21,101,192,1.0)"
+};
     const proyectos = [
       {
         id: 1,
@@ -332,9 +340,10 @@
       col.dataset.estado = estado;
 
       col.innerHTML = `
-        <h2>${estado}</h2>
-        <div class="counter">${tarjetas.length} proyecto(s)</div>
-      `;
+  <h2 style="background: ${coloresEstado[estado]}; color: white;">${estado}</h2>
+  <div class="counter">${tarjetas.length} proyecto(s)</div>
+`;
+
 
       col.addEventListener("dragover", e => {
         e.preventDefault();
